@@ -1,24 +1,23 @@
 #define OK_IMPLEMENTATION
 #include "ok.h"
+
+#include "rainbows/rainbows.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
-// defining the buffers for the VM to use
-static uint8_t* ram;
-static uint8_t* program;
+static Rainbows bus;
 
 uint8_t ok_mem_read(size_t address) {
-  return ram[address];
+  return rb_read(&bus, address);
 }
 
 void ok_mem_write(size_t address, uint8_t val) {
-  if (address == 0x00babe) putchar(val); // memory-mapped putchar
-  ram[address] = val;
+  return rb_write(&bus, address, val);
 }
 
 uint8_t ok_fetch(size_t address) {
-  // printf("GOT: %2x\n", program[address]);
-  return program[address];
+  return bus.program[address];
 }
 
 int main(int argc, char* argv[]) {
@@ -27,28 +26,33 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  // allocate the ram and program buffers
-  printf("Allocating memory...\n");
-  
-  ram = calloc(OK_MEM_SIZE, 1);
-  program = calloc(OK_MEM_SIZE, 1);
+  uint8_t* ram = calloc(OK_MEM_SIZE, 1);
+  uint8_t* program = calloc(OK_MEM_SIZE, 1);
   if (!ram || !program) {
+    printf("Failed to init rainbows\n");
     free(ram);
     free(program);
     return 1;
-  };
-
-  // load program file into the program buffer
-  printf("Loading program...\n");
+  }
   
   if (!ok_load_file(program, 0, argv[1])) {
+    printf("Failed to load file %s\n", argv[1]);
     free(ram);
     free(program);
     return 1; 
   }
 
-  printf("Starting VM...\n");
-  
+  // initialize the console
+  RbConsole console;
+  if (!rb_console_init(&console, argc, argv)) {
+    printf("Failed to init console device\n");
+    free(ram);
+    free(program);
+    return 1;
+  }
+
+  rb_init(&bus, ram, program, &console);
+
   OkState vm;
   ok_init(&vm);
   while (vm.status == OK_RUNNING) ok_tick(&vm);
