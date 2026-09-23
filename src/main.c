@@ -1,7 +1,7 @@
 #define OK_IMPLEMENTATION
 #include "ok.h"
 
-#include "rainbows/rainbows.h"
+#include "rainbows.h"
 
 #include <stdio.h>
 #include <stdlib.h>

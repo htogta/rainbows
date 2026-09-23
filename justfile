@@ -5,7 +5,7 @@ run: build
 
 build:
   mkdir -p build
-  cc -o build/rainbows src/main.c src/rainbows/rainbows.c src/rainbows/console.c
+  cc -o build/rainbows src/main.c src/rainbows.c src/devices/console.c
 
 clean:
   rm -rf build

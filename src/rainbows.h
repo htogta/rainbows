@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#include "console.h"
+#include "devices/console.h"
 
 typedef struct {
   uint8_t* ram;
