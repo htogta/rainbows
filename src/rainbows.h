@@ -4,16 +4,22 @@
 #include <stdint.h>
 
 #include "devices/console.h"
+#include "devices/arith.h"
 
 typedef struct {
   uint8_t* ram;
   uint8_t* program;
 
   RbConsole* console;
+  RbArith* arith;
 } Rainbows;
 
 // ram assumed to point to a buffer of at least OK_MEM_SIZE bytes
-int rb_init(Rainbows* rb, uint8_t* ram, uint8_t* program, RbConsole* console);
+int rb_init(Rainbows* rb, 
+            uint8_t* ram, 
+            uint8_t* program, 
+            RbConsole* console,
+            RbArith* arith);
 
 // addresses are 24-bit ok addresses, represented here with uint32_t
 uint8_t rb_read(Rainbows* rb, uint32_t address);

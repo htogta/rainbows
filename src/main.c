@@ -51,7 +51,16 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  rb_init(&bus, ram, program, &console);
+  // initialize the math device
+  RbArith arith;
+  if (!rb_arith_init(&arith)) { // TODO other args
+    printf("Failed to init arithmetic device\n");
+    free(ram);
+    free(program);
+    return 1;
+  }
+
+  rb_init(&bus, ram, program, &console, &arith);
 
   OkState vm;
   ok_init(&vm);
