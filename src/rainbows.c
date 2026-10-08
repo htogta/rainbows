@@ -23,7 +23,10 @@ uint8_t rb_read(Rainbows* rb, uint32_t address) {
 
   if (address >= RB_ARITH_BASE && address < RB_ARITH_BASE + RB_ARITH_SIZE) 
     return rb_arith_read(rb->arith, address - RB_ARITH_BASE);
-
+  
+  if (address >= RB_DISK_BASE && address < RB_DISK_BASE + RB_DISK_SIZE) 
+      return rb_disk_read(rb->disk, address - RB_DISK_BASE);
+  
   return rb->ram[address];
 }
 
@@ -35,6 +38,11 @@ void rb_write(Rainbows* rb, uint32_t address, uint8_t value) {
 
   if (address >= RB_ARITH_BASE && address < RB_ARITH_BASE + RB_ARITH_SIZE) {
     rb_arith_write(rb->arith, address - RB_ARITH_BASE, value);
+    return;
+  }
+
+  if (address >= RB_DISK_BASE && address < RB_DISK_BASE + RB_DISK_SIZE) {
+    rb_disk_write(rb->disk, address - RB_DISK_BASE, value);
     return;
   }
 

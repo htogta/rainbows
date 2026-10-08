@@ -5,6 +5,7 @@
 
 #include "devices/console.h"
 #include "devices/arith.h"
+#include "devices/disk.h"
 
 typedef struct {
   uint8_t* ram;
@@ -12,6 +13,7 @@ typedef struct {
 
   RbConsole* console;
   RbArith* arith;
+  RbDisk* disk;
 } Rainbows;
 
 // ram assumed to point to a buffer of at least OK_MEM_SIZE bytes

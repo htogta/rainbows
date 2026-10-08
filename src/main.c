@@ -60,6 +60,10 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
+  // initialize the disk device
+  RbDisk disk;
+  // TODO get disk file from cli args?
+
   rb_init(&bus, ram, program, &console, &arith);
 
   OkState vm;
