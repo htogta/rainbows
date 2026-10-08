@@ -21,7 +21,8 @@ int rb_init(Rainbows* rb,
             uint8_t* ram, 
             uint8_t* program, 
             RbConsole* console,
-            RbArith* arith);
+            RbArith* arith,
+            RbDisk* disk);
 
 // addresses are 24-bit ok addresses, represented here with uint32_t
 uint8_t rb_read(Rainbows* rb, uint32_t address);

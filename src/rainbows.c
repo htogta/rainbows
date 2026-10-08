@@ -5,15 +5,17 @@ int rb_init(
   uint8_t* ram, 
   uint8_t* program, 
   RbConsole* console, 
-  RbArith* arith
+  RbArith* arith,
+  RbDisk* disk
 ) {
-  if (!ram || !program || !console || !arith) return 0;
+  if (!ram || !program || !console || !arith || !disk) return 0;
 
   rb->ram = ram;
   rb->program = program;
   rb->console = console;
   rb->arith = arith;
-
+  rb->disk = disk;
+  
   return 1;
 }
 
