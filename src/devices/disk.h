@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define RB_DISK_BASE (0) // TODO
+#define RB_DISK_BASE (32) 
 
 #define RB_DISK_CAPACITY (0)
 #define RB_DISK_UPDATE (4)

@@ -6,15 +6,17 @@ int rb_init(
   uint8_t* program, 
   RbConsole* console, 
   RbArith* arith,
-  RbDisk* disk
+  RbDisk* disk,
+  RbDatetime* dt
 ) {
-  if (!ram || !program || !console || !arith || !disk) return 0;
+  if (!ram || !program || !console || !arith || !disk || !dt) return 0;
 
   rb->ram = ram;
   rb->program = program;
   rb->console = console;
   rb->arith = arith;
   rb->disk = disk;
+  rb->datetime = dt;
   
   return 1;
 }

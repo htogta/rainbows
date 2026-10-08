@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define RB_ARITH_BASE (0) // TODO change
+#define RB_ARITH_BASE (11) 
 
 #define RB_ARITH_OP (0)
 #define RB_ARITH_WIDTH (1)

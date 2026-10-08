@@ -27,21 +27,20 @@ int main(int argc, char* argv[]) {
   char default_path[4096];
   char* bf_path = NULL;
   size_t capacity = 65536;
-  int create = 0;
 
   if (argc < 2) {
     fprintf(stderr, 
-    "usage: rainbows program.rom [-d file.blocks | -n file.blocks] [-c capacity]\n");
+    "usage: rainbows program.rom [-c capacity] [-d file.blocks | -n file.blocks]\n");
     return 1;
   }
 
   for (int i = 2; i < argc; i++) {
     if (!strcmp(argv[i], "-d")) {
       bf_path = argv[++i];
-      create = 0;
+      bf = blockfile_open(bf_path);
     } else if (!strcmp(argv[i], "-n")) {
       bf_path = argv[++i];
-      create = 1;
+      bf = blockfile_create(bf_path, capacity);
     } else if (!strcmp(argv[i], "-c")) {
       capacity = strtoul(argv[++i], NULL, 10);
     } else {
@@ -51,20 +50,16 @@ int main(int argc, char* argv[]) {
   }
 
   if (bf_path == NULL) {
-    snprintf(default_path, sizeof(default_path), "%s/.blocks", getenv("$HOME"));
+    snprintf(default_path, sizeof(default_path), "%s/.blocks", getenv("HOME"));
     bf_path = default_path;
-    
+  
     if (access(bf_path, F_OK) == 0) {
       bf = blockfile_open(bf_path);
-      fprintf(stderr, "warning: %s already exists, ignoring -c\n", bf_path);
+      if (capacity != 65536) {
+        fprintf(stderr, "warning: %s already exists; ignoring -c\n", bf_path);
+      }
     } else {
-      bf = blockfile_create(bf_path, capacity);
-    }
-  } else {
-    if (create) {
-      bf = blockfile_create(bf_path, capacity);
-    } else {
-      bf = blockfile_open(bf_path);
+        bf = blockfile_create(bf_path, capacity);
     }
   }
   

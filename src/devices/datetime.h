@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define RB_DATETIME_BASE (0) // TODO 
+#define RB_DATETIME_BASE (0) 
 
 #define RB_DATETIME_YEAR (1)
 #define RB_DATETIME_MONTH (3)

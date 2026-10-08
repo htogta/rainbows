@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define RB_CONSOLE_BASE (0) // TODO we sure we want this to be 0?
+#define RB_CONSOLE_BASE (26) 
 
 #define RB_CONSOLE_STDIN (0)
 #define RB_CONSOLE_STDOUT (1)

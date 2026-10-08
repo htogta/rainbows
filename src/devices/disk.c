@@ -1,3 +1,4 @@
+#define BLOCKS_IMPLEMENTATION
 #include "disk.h"
 
 int rb_disk_init(RbDisk* d, BlockFile* bf) {
