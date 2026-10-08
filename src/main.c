@@ -107,7 +107,14 @@ int main(int argc, char* argv[]) {
     goto had_error;
   }
 
-  rb_init(&bus, ram, program, &console, &arith, &disk);
+  // initialize the time device
+  RbDatetime dt;
+  if (!rb_datetime_init(&dt)) {
+    printf("Failed to init datetime device\n");
+    goto had_error;
+  }
+
+  rb_init(&bus, ram, program, &console, &arith, &disk, &dt);
 
   OkState vm;
   ok_init(&vm);
