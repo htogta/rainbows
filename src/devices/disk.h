@@ -5,13 +5,13 @@
 
 #define RB_DISK_BASE (0) // TODO
 
-#define RB_DISK_CAPACITY (RB_DISK_BASE)
-#define RB_DISK_UPDATE (RB_DISK_BASE + 4)
-#define RB_DISK_ERROR (RB_DISK_BASE + 5)
-#define RB_DISK_CURRENT (RB_DISK_BASE + 6)
-#define RB_DISK_DATA (RB_DISK_UPDATE + 10)
+#define RB_DISK_CAPACITY (0)
+#define RB_DISK_UPDATE (4)
+#define RB_DISK_ERROR (5)
+#define RB_DISK_CURRENT (6)
+#define RB_DISK_DATA (10)
 
-#define RB_DISK_SIZE ((RB_DISK_DATA - RB_DISK_BASE) + 1024)
+#define RB_DISK_SIZE (1034) // TODO should be right?
 
 #include "blocks.h"
 

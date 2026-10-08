@@ -5,12 +5,12 @@
 
 #define RB_ARITH_BASE (0) // TODO change
 
-#define RB_ARITH_OP (RB_ARITH_BASE)
-#define RB_ARITH_WIDTH (RB_ARITH_BASE + 1)
-#define RB_ARITH_ERR (RB_ARITH_BASE + 2)
-#define RB_ARITH_X (RB_ARITH_BASE + 3)
-#define RB_ARITH_Y (RB_ARITH_X + 4)
-#define RB_ARITH_RESULT (RB_ARITH_Y + 4)
+#define RB_ARITH_OP (0)
+#define RB_ARITH_WIDTH (1)
+#define RB_ARITH_ERR (2)
+#define RB_ARITH_X (3)
+#define RB_ARITH_Y (7)
+#define RB_ARITH_RESULT (11)
 
 #define RB_ARITH_SIZE (15)
 
