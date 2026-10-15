@@ -41,7 +41,9 @@ uint8_t rb_arith_read(RbArith* a, uint32_t addr) {
 
 void rb_arith_write(RbArith* a, uint32_t addr, uint8_t value) {
   // read-only
-  if (addr == RB_ARITH_RESULT || addr == RB_ARITH_ERR) return;
+  if (addr == RB_ARITH_RESULT || addr == RB_ARITH_RESULT + 1 
+      || addr == RB_ARITH_RESULT + 2 || addr == RB_ARITH_RESULT + 3 
+      || addr == RB_ARITH_ERR) return;
     
   if (addr == RB_ARITH_WIDTH) {
     if (value > 3) return;
@@ -50,8 +52,15 @@ void rb_arith_write(RbArith* a, uint32_t addr, uint8_t value) {
 
   // the actual math ops
   if (addr == RB_ARITH_OP) {
-    if (value > RB_ARITH_MOD) return;
-    if (a->width > 3) return;
+    if (a->width > 3) {
+      a->op = 0;
+      a->width = 0;
+      a->err = 0;
+      a->x = 0;
+      a->y = 0;
+      a->result = 0;
+      return;
+    }
 
     a->op = value;
     int max_int_size = 1 << ((a->width + 1) * 8);
@@ -74,6 +83,12 @@ void rb_arith_write(RbArith* a, uint32_t addr, uint8_t value) {
         }
         break;
       default:
+        a->op = 0;
+        a->width = 0;
+        a->err = 0;
+        a->x = 0;
+        a->y = 0;
+        a->result = 0;
         return;
     }
   }
