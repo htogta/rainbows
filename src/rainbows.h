@@ -7,6 +7,7 @@
 #include "devices/arith.h"
 #include "devices/disk.h"
 #include "devices/datetime.h"
+#include "devices/spfloat.h"
 
 typedef struct {
   uint8_t* ram;
@@ -16,6 +17,7 @@ typedef struct {
   RbArith* arith;
   RbDisk* disk;
   RbDatetime* datetime;
+  RbFloat* flt;
 } Rainbows;
 
 // ram assumed to point to a buffer of at least OK_MEM_SIZE bytes
@@ -25,7 +27,8 @@ int rb_init(Rainbows* rb,
             RbConsole* console,
             RbArith* arith,
             RbDisk* disk,
-            RbDatetime* datetime);
+            RbDatetime* datetime,
+            RbFloat* flt);
 
 // addresses are 24-bit ok addresses, represented here with uint32_t
 uint8_t rb_read(Rainbows* rb, uint32_t address);

@@ -5,7 +5,7 @@
 
 // a device for working with single-precision (32-bit) floating point numbers
 
-#define RB_FLOAT_BASE () // TODO
+#define RB_FLOAT_BASE (1066) // TODO I'd rather this be earlier but it works for now
 
 #define RB_FLOAT_OP (0)
 #define RB_FLOAT_ERR (1)

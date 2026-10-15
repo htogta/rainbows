@@ -7,9 +7,10 @@ int rb_init(
   RbConsole* console, 
   RbArith* arith,
   RbDisk* disk,
-  RbDatetime* dt
+  RbDatetime* dt,
+  RbFloat* flt
 ) {
-  if (!ram || !program || !console || !arith || !disk || !dt) return 0;
+  if (!ram || !program || !console || !arith || !disk || !dt || !flt) return 0;
 
   rb->ram = ram;
   rb->program = program;
@@ -17,6 +18,7 @@ int rb_init(
   rb->arith = arith;
   rb->disk = disk;
   rb->datetime = dt;
+  rb->flt = flt;
   
   return 1;
 }
@@ -29,10 +31,13 @@ uint8_t rb_read(Rainbows* rb, uint32_t address) {
     return rb_arith_read(rb->arith, address - RB_ARITH_BASE);
   
   if (address >= RB_DISK_BASE && address < RB_DISK_BASE + RB_DISK_SIZE) 
-      return rb_disk_read(rb->disk, address - RB_DISK_BASE);
+    return rb_disk_read(rb->disk, address - RB_DISK_BASE);
 
   if (address >= RB_DATETIME_BASE && address < RB_DATETIME_BASE + RB_DATETIME_SIZE) 
-      return rb_datetime_read(rb->datetime, address - RB_DATETIME_BASE);
+    return rb_datetime_read(rb->datetime, address - RB_DATETIME_BASE);
+
+  if (address >= RB_FLOAT_BASE && address < RB_FLOAT_BASE + RB_FLOAT_SIZE) 
+    return rb_float_read(rb->flt, address - RB_FLOAT_BASE);  
   
   return rb->ram[address];
 }
@@ -55,6 +60,11 @@ void rb_write(Rainbows* rb, uint32_t address, uint8_t value) {
 
   if (address >= RB_DATETIME_BASE && address < RB_DATETIME_BASE + RB_DATETIME_SIZE) {
     rb_datetime_write(rb->datetime, address - RB_DATETIME_BASE, value);
+    return;
+  }
+
+  if (address >= RB_FLOAT_BASE && address < RB_FLOAT_BASE + RB_FLOAT_SIZE) {
+    rb_float_write(rb->flt, address - RB_FLOAT_BASE, value);
     return;
   }
 

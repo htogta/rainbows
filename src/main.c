@@ -109,7 +109,14 @@ int main(int argc, char* argv[]) {
     goto had_error;
   }
 
-  rb_init(&bus, ram, program, &console, &arith, &disk, &dt);
+  // initialize the float device
+  RbFloat flt;
+  if (!rb_float_init(&flt)) {
+    printf("Failed to init float device\n");
+    goto had_error;
+  }
+
+  rb_init(&bus, ram, program, &console, &arith, &disk, &dt, &flt);
 
   OkState vm;
   ok_init(&vm);
