@@ -3,10 +3,12 @@
 
 #include <stdint.h>
 
-#include "devices/console.h"
-#include "devices/arith.h"
+// this header eventually includes all the other ones
 #include "devices/disk.h"
+#include "devices/console.h"
 #include "devices/datetime.h"
+#include "devices/screen.h"
+#include "devices/arith.h"
 #include "devices/spfloat.h"
 
 typedef struct {
@@ -18,6 +20,7 @@ typedef struct {
   RbDisk* disk;
   RbDatetime* datetime;
   RbFloat* flt;
+  RbScreen* screen;
 } Rainbows;
 
 // ram assumed to point to a buffer of at least OK_MEM_SIZE bytes
@@ -28,7 +31,8 @@ int rb_init(Rainbows* rb,
             RbArith* arith,
             RbDisk* disk,
             RbDatetime* datetime,
-            RbFloat* flt);
+            RbFloat* flt,
+            RbScreen* screen);
 
 // addresses are 24-bit ok addresses, represented here with uint32_t
 uint8_t rb_read(Rainbows* rb, uint32_t address);

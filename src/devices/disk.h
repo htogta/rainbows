@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define RB_DISK_BASE (32) 
+#include "arith.h"
 
 #define RB_DISK_CAPACITY (0)
 #define RB_DISK_UPDATE (4)
@@ -11,7 +11,8 @@
 #define RB_DISK_CURRENT (6)
 #define RB_DISK_DATA (10)
 
-#define RB_DISK_SIZE (1034) // TODO should be right?
+#define RB_DISK_SIZE (1034)
+#define RB_DISK_BASE (RB_ARITH_BASE - RB_DISK_SIZE) 
 
 #include "blocks.h"
 

@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define RB_CONSOLE_BASE (26) 
+#include "datetime.h"
 
 #define RB_CONSOLE_STDIN (0)
 #define RB_CONSOLE_STDOUT (1)
@@ -13,6 +13,8 @@
 #define RB_CONSOLE_ARG_CHAR (5)
 
 #define RB_CONSOLE_SIZE (6)
+
+#define RB_CONSOLE_BASE (RB_DATETIME_BASE - RB_CONSOLE_SIZE) 
 
 typedef struct {
   uint8_t argc;

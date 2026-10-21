@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define RB_ARITH_BASE (11) 
+#include "spfloat.h"
 
 #define RB_ARITH_OP (0)
 #define RB_ARITH_WIDTH (1)
@@ -13,6 +13,8 @@
 #define RB_ARITH_RESULT (11)
 
 #define RB_ARITH_SIZE (15)
+
+#define RB_ARITH_BASE (RB_FLOAT_BASE - RB_ARITH_SIZE) 
 
 // here's our different operations we support
 #define RB_ARITH_NONE (0) // nop

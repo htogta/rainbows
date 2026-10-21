@@ -5,11 +5,12 @@
 
 // TODO maybe some defines for setting fullscreen/no-resize modes?
 
+#include "disk.h"
+
 #define RB_SCREEN_MAX_DIM (2048) // width cannot be > 2048, same with height
 #define RB_SCREEN_DEFAULT_W (640)
 #define RB_SCREEN_DEFAULT_H (480)
 
-#define RB_SCREEN_BASE () // TODO will set this later
 
 #define RB_SCREEN_WIDTH (0)
 #define RB_SCREEN_HEIGHT (2)
@@ -24,7 +25,8 @@
 #define RB_SCREEN_DEPTH (18) // this addr will just return 16 on reading 
 #define RB_SCREEN_SPRITE (19) 
 
-#define RB_SCREEN_SIZE (278) // should be right?
+#define RB_SCREEN_SIZE (RB_SCREEN_SPRITE + 512) // should be right?
+#define RB_SCREEN_BASE (RB_DISK_BASE - RB_SCREEN_SIZE) 
 
 // 640x480 screen, using 16-bit RGB565 for color
 // (i.e. framebuffer is 640 * 480 * (16/8) bytes, or 640 * 480 16-bit values)

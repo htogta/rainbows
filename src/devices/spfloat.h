@@ -5,7 +5,7 @@
 
 // a device for working with single-precision (32-bit) floating point numbers
 
-#define RB_FLOAT_BASE (1066) // TODO I'd rather this be earlier but it works for now
+#include "console.h"
 
 #define RB_FLOAT_OP (0)
 #define RB_FLOAT_ERR (1)
@@ -14,6 +14,8 @@
 #define RB_FLOAT_RESULT (10) // 11 12 13
 
 #define RB_FLOAT_SIZE (14)
+
+#define RB_FLOAT_BASE (RB_CONSOLE_BASE - RB_FLOAT_SIZE)
 
 // here's the different operations we support
 #define RB_FLOAT_OP_NONE (0) // nop
