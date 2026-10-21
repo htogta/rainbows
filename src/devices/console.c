@@ -41,6 +41,7 @@ void rb_console_write(RbConsole* c, uint32_t addr, uint8_t value) {
 
   if (addr == RB_CONSOLE_STDOUT) {
     putchar((char) value);
+    fflush(stdout);
     return;
   }
 
