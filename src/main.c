@@ -23,7 +23,7 @@ uint8_t ok_fetch(size_t address) {
 }
 
 int main(int argc, char* argv[]) {
-  BlockFile* bf;
+  BlockFile* bf = NULL;
   char default_path[4096];
   char* bf_path = NULL;
   size_t capacity = 65536;
