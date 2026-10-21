@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define RB_MEM_END (0x100000)
+#define RB_MEM_END (0x1000000)
 
 #define RB_DATETIME_BASE (RB_MEM_END - RB_DATETIME_SIZE) 
 
