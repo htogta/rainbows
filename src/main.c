@@ -116,7 +116,14 @@ int main(int argc, char* argv[]) {
     goto had_error;
   }
 
-  rb_init(&bus, ram, program, &console, &arith, &disk, &dt, &flt);
+  // initialize the screen device
+  RbScreen screen;
+  if (!rb_screen_init(&screen)) {
+    printf("Failed to init screen device\n");
+    goto had_error;
+  }
+
+  rb_init(&bus, ram, program, &console, &arith, &disk, &dt, &flt, &screen);
 
   OkState vm;
   ok_init(&vm);
@@ -125,6 +132,7 @@ int main(int argc, char* argv[]) {
   free(ram);
   free(program);
   blockfile_close(bf);
+  rb_screen_free(&screen);
   return vm.status != OK_HALTED;
 
   had_error:
