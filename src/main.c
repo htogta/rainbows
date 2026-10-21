@@ -32,7 +32,7 @@ uint8_t ok_mem_read(size_t address) {
 }
 
 void ok_mem_write(size_t address, uint8_t val) {
-  return rb_write(&bus, address, val);
+  rb_write(&bus, address, val);
 }
 
 uint8_t ok_fetch(size_t address) {
@@ -142,7 +142,12 @@ int main(int argc, char* argv[]) {
 
   rb_init(&bus, ram, program, &console, &arith, &disk, &dt, &flt, &screen);
 
-  // TODO raylib time
+  // TODO remove
+  // printf("screen base = %x\n", RB_SCREEN_BASE);
+  // printf("console base = %x\n", RB_CONSOLE_BASE);
+
+  // raylib stuff
+  SetTraceLogLevel(LOG_ERROR); 
   SetConfigFlags(FLAG_WINDOW_RESIZABLE);
   InitWindow(screen.width, screen.height, "rainbows");
   SetTargetFPS(60);
@@ -150,6 +155,7 @@ int main(int argc, char* argv[]) {
   Texture2D tex = {0};
 
   OkState vm;
+  ok_init(&vm);
 
   while (!WindowShouldClose()) {
     // run this frame's slice of vm time
