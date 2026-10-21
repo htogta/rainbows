@@ -1,12 +1,29 @@
 #define OK_IMPLEMENTATION
 #include "ok.h"
-
+#include "raylib.h"
 #include "rainbows.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+
+#define TICKS_PER_FRAME (50000) // TODO tune this
+
+// wraps the device's framebuffer as an Image and uploads it to the GPU
+static Texture2D make_screen_texture(const RbScreen* s) {
+  Image img;
+  img.data = s->fb;
+  img.width = s->width;
+  img.height = s->height;
+  img.mipmaps = 1;
+  img.format = PIXELFORMAT_UNCOMPRESSED_R5G6B5;
+
+  // don't UnloadImage, fb belongs to the device
+  Texture2D t = LoadTextureFromImage(img);  
+  SetTextureFilter(t, TEXTURE_FILTER_POINT);
+  return t;
+}
 
 static Rainbows bus;
 
@@ -23,6 +40,7 @@ uint8_t ok_fetch(size_t address) {
 }
 
 int main(int argc, char* argv[]) {
+  RbScreen screen = {0};
   BlockFile* bf = NULL;
   char default_path[4096];
   char* bf_path = NULL;
@@ -117,7 +135,6 @@ int main(int argc, char* argv[]) {
   }
 
   // initialize the screen device
-  RbScreen screen;
   if (!rb_screen_init(&screen)) {
     printf("Failed to init screen device\n");
     goto had_error;
@@ -125,19 +142,56 @@ int main(int argc, char* argv[]) {
 
   rb_init(&bus, ram, program, &console, &arith, &disk, &dt, &flt, &screen);
 
+  // TODO raylib time
+  SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+  InitWindow(screen.width, screen.height, "rainbows");
+  SetTargetFPS(60);
+
+  Texture2D tex = {0};
+
   OkState vm;
-  ok_init(&vm);
-  while (vm.status == OK_RUNNING) ok_tick(&vm);
+
+  while (!WindowShouldClose()) {
+    // run this frame's slice of vm time
+    for (int i = 0; i < TICKS_PER_FRAME && vm.status == OK_RUNNING; i++) {
+      ok_tick(&vm);
+    }
+
+    // vblank
+    screen.frame_counter++;
+
+    // sync with framebuffer
+    if (screen.resized) {
+      screen.resized = 0;
+      if (tex.id) UnloadTexture(tex);
+      tex = make_screen_texture(&screen);
+    } else {
+      UpdateTexture(tex, screen.fb);
+    }
+
+    BeginDrawing();
+      ClearBackground(BLACK);
+      DrawTexturePro(tex,
+        (Rectangle){0, 0, screen.width, screen.height},
+        (Rectangle){0, 0, GetScreenWidth(), GetScreenHeight()},
+        (Vector2){0, 0}, 0.0f, WHITE);
+    EndDrawing();
+  }
+
+  int status = vm.status;
+  if (tex.id) UnloadTexture(tex);
+  CloseWindow();
 
   free(ram);
   free(program);
   blockfile_close(bf);
   rb_screen_free(&screen);
-  return vm.status != OK_HALTED;
+  return status != OK_HALTED && status != OK_RUNNING;
 
   had_error:
     free(ram);
     free(program);
     blockfile_close(bf);
+    rb_screen_free(&screen);
     return 1;
 }

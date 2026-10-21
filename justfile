@@ -1,11 +1,12 @@
-default: run
-
-run: build
-  ./build/rainbows test.rom
+default: build
 
 build:
   mkdir -p build
-  cc -o build/rainbows src/main.c src/rainbows.c src/devices/console.c src/devices/arith.c src/devices/datetime.c src/devices/disk.c src/devices/spfloat.c src/devices/screen.c -lm
+  cc src/main.c src/rainbows.c src/devices/*.c \
+    -I src/raylib/include \
+    src/raylib/lib/libraylib.a \
+    -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 \
+    -o build/rainbows
 
 clean:
   rm -rf build
