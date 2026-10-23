@@ -67,12 +67,14 @@ void rb_arith_write(RbArith* a, uint32_t addr, uint8_t value) {
     switch (a->op) {
       case RB_ARITH_MUL:
         a->result = (a->x * a->y) % max_int_size;
+        a->err = 0; // reset the error
         break;
       case RB_ARITH_DIV:
         if (a->y == 0) {
           a->err = 1; // divide by 0 err
         } else {
           a->result = (a->x / a->y) % max_int_size;
+          a->err = 0; // reset the error
         }
         break;
       case RB_ARITH_MOD:
@@ -80,6 +82,7 @@ void rb_arith_write(RbArith* a, uint32_t addr, uint8_t value) {
           a->err = 2; // mod by 0 err
         } else {
           a->result = (a->x % a->y) % max_int_size;
+          a->err = 0; // reset the error
         }
         break;
       default:
@@ -91,16 +94,17 @@ void rb_arith_write(RbArith* a, uint32_t addr, uint8_t value) {
         a->result = 0;
         return;
     }
+    return;
   }
   
   uint32_t value32 = (uint32_t) value;
   if (addr == RB_ARITH_X) a->x = (a->x & 0x00ffffff) | (value32 << 24);
   if (addr == RB_ARITH_X + 1) a->x = (a->x & 0xff00ffff) | (value32 << 16);
-  if (addr == RB_ARITH_X + 2) a->x = (a->x & 0x0000ff00) | (value32 << 8);
-  if (addr == RB_ARITH_X + 3) a->x = (a->x & 0x000000ff) | value32;
+  if (addr == RB_ARITH_X + 2) a->x = (a->x & 0xffff00ff) | (value32 << 8);
+  if (addr == RB_ARITH_X + 3) a->x = (a->x & 0xffffff00) | value32;
 
   if (addr == RB_ARITH_Y) a->y = (a->y & 0x00ffffff) | (value32 << 24);
   if (addr == RB_ARITH_Y + 1) a->y = (a->y & 0xff00ffff) | (value32 << 16);
-  if (addr == RB_ARITH_Y + 2) a->y = (a->y & 0x0000ff00) | (value32 << 8);
-  if (addr == RB_ARITH_Y + 3) a->y = (a->y & 0x000000ff) | value32;  
+  if (addr == RB_ARITH_Y + 2) a->y = (a->y & 0xffff00ff) | (value32 << 8);
+  if (addr == RB_ARITH_Y + 3) a->y = (a->y & 0xffffff00) | value32;  
 }
