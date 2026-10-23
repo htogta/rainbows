@@ -143,8 +143,12 @@ int main(int argc, char* argv[]) {
   rb_init(&bus, ram, program, &console, &arith, &disk, &dt, &flt, &screen);
 
   // TODO remove
+  // printf("arith base = %x\n", RB_ARITH_BASE);
   // printf("screen base = %x\n", RB_SCREEN_BASE);
   // printf("console base = %x\n", RB_CONSOLE_BASE);
+  // printf("datetime base = %x\n", RB_DATETIME_BASE);
+  // printf("disk base = %x\n", RB_DISK_BASE);
+  // printf("fpu base = %x\n", RB_FLOAT_BASE);
 
   // raylib stuff
   SetTraceLogLevel(LOG_ERROR); 
@@ -157,7 +161,7 @@ int main(int argc, char* argv[]) {
   OkState vm;
   ok_init(&vm);
 
-  while (!WindowShouldClose()) {
+  while (!WindowShouldClose() && vm.status == OK_RUNNING) {
     // run this frame's slice of vm time
     for (int i = 0; i < TICKS_PER_FRAME && vm.status == OK_RUNNING; i++) {
       ok_tick(&vm);
