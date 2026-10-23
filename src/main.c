@@ -1,6 +1,6 @@
 #define OK_IMPLEMENTATION
 #include "ok.h"
-#include "raylib.h"
+#include <raylib.h>
 #include "rainbows.h"
 
 #include <stdio.h>
@@ -140,20 +140,28 @@ int main(int argc, char* argv[]) {
     goto had_error;
   }
 
-  rb_init(&bus, ram, program, &console, &arith, &disk, &dt, &flt, &screen);
+  RbKeyboard keyboard;
+  if (!rb_keyboard_init(&keyboard)) {
+    printf("Failed to init keyboard device\n");
+    goto had_error;
+  }
+
+  rb_init(&bus, ram, program, &console, &arith, &disk, &dt, &flt, &screen, &keyboard);
 
   // TODO remove
-  // printf("arith base = %x\n", RB_ARITH_BASE);
-  // printf("screen base = %x\n", RB_SCREEN_BASE);
-  // printf("console base = %x\n", RB_CONSOLE_BASE);
-  // printf("datetime base = %x\n", RB_DATETIME_BASE);
-  // printf("disk base = %x\n", RB_DISK_BASE);
-  // printf("fpu base = %x\n", RB_FLOAT_BASE);
+  printf("keyboard base = %x\n", RB_KEYBOARD_BASE);
+  printf("screen base = %x\n", RB_SCREEN_BASE);
+  printf("disk base = %x\n", RB_DISK_BASE);
+  printf("arith base = %x\n", RB_ARITH_BASE);
+  printf("fpu base = %x\n", RB_FLOAT_BASE);
+  printf("console base = %x\n", RB_CONSOLE_BASE);
+  printf("datetime base = %x\n", RB_DATETIME_BASE);
 
   // raylib stuff
   SetTraceLogLevel(LOG_ERROR); 
   SetConfigFlags(FLAG_WINDOW_RESIZABLE);
   InitWindow(screen.width, screen.height, "rainbows");
+  SetExitKey(KEY_NULL); 
   SetTargetFPS(60);
 
   Texture2D tex = {0};
@@ -162,6 +170,8 @@ int main(int argc, char* argv[]) {
   ok_init(&vm);
 
   while (!WindowShouldClose() && vm.status == OK_RUNNING) {
+    rb_keyboard_update(&keyboard);
+  
     // run this frame's slice of vm time
     for (int i = 0; i < TICKS_PER_FRAME && vm.status == OK_RUNNING; i++) {
       ok_tick(&vm);
