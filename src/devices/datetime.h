@@ -5,19 +5,18 @@
 
 #define RB_MEM_END (0x1000000)
 
-#define RB_DATETIME_BASE (RB_MEM_END - RB_DATETIME_SIZE) 
-
-#define RB_DATETIME_YEAR (1)
-#define RB_DATETIME_MONTH (3)
-#define RB_DATETIME_DAY (4)
-#define RB_DATETIME_HOUR (5)
-#define RB_DATETIME_MIN (6)
-#define RB_DATETIME_SEC (7)
-#define RB_DATETIME_DOTW (8)
-#define RB_DATETIME_DOTY (9)
+#define RB_DATETIME_YEAR (0)
+#define RB_DATETIME_MONTH (2)
+#define RB_DATETIME_DAY (3)
+#define RB_DATETIME_HOUR (4)
+#define RB_DATETIME_MIN (5)
+#define RB_DATETIME_SEC (6)
+#define RB_DATETIME_DOTW (7)
+#define RB_DATETIME_DOTY (8)
 #define RB_DATETIME_ISDST (10)
 
 #define RB_DATETIME_SIZE (11)
+#define RB_DATETIME_BASE (RB_MEM_END - RB_DATETIME_SIZE) 
 
 // just copying uxn's datetime device
 typedef struct {
@@ -28,7 +27,7 @@ typedef struct {
   uint8_t min;
   uint8_t sec;
   uint8_t dotw;
-  uint8_t doty;
+  uint16_t doty;
   uint8_t isdst;
 } RbDatetime;
 

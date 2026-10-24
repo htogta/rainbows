@@ -2,18 +2,18 @@
 #include <time.h>
 
 static void rb_datetime_now(RbDatetime* dt) {
-    time_t t = time(NULL);
-    struct tm *tm = localtime(&t);
-
-    dt->year  = tm->tm_year + 1900;
-    dt->month = tm->tm_mon + 1;
-    dt->day   = tm->tm_mday;
-    dt->hour  = tm->tm_hour;
-    dt->min   = tm->tm_min;
-    dt->sec   = tm->tm_sec;
-    dt->dotw  = tm->tm_wday;
-    dt->doty  = tm->tm_yday;
-    dt->isdst = tm->tm_isdst;
+  time_t t = time(NULL);
+  struct tm *tm = localtime(&t);
+  
+  dt->year = tm->tm_year + 1900;
+  dt->month = tm->tm_mon + 1;
+  dt->day = tm->tm_mday;
+  dt->hour = tm->tm_hour;
+  dt->min = tm->tm_min;
+  dt->sec = tm->tm_sec;
+  dt->dotw = tm->tm_wday;
+  dt->doty = tm->tm_yday;
+  dt->isdst = tm->tm_isdst;
 }
 
 int rb_datetime_init(RbDatetime* dt) {
@@ -36,7 +36,10 @@ uint8_t rb_datetime_read(RbDatetime* dt, uint32_t addr) {
   if (addr == RB_DATETIME_MIN) return dt->min;
   if (addr == RB_DATETIME_SEC) return dt->sec;
   if (addr == RB_DATETIME_DOTW) return dt->dotw;  
-  if (addr == RB_DATETIME_DOTY) return dt->doty;
+
+  if (addr == RB_DATETIME_DOTY) return (dt->doty & 0xff00) >> 8;
+  if (addr == RB_DATETIME_DOTY + 1) return dt->doty & 0x00ff;
+  
   if (addr == RB_DATETIME_ISDST) return dt->isdst;
 
   return 0;
