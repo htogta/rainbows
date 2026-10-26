@@ -10,9 +10,20 @@ int rb_init(
   RbDatetime* dt,
   RbFloat* flt,
   RbScreen* screen,
-  RbKeyboard* keyboard
+  RbKeyboard* keyboard,
+  RbMouse* mouse
 ) {
-  if (!ram || !program || !console || !arith || !disk || !dt || !flt || !keyboard) return 0;
+  if (
+    !ram || 
+    !program || 
+    !console || 
+    !arith || 
+    !disk || 
+    !dt || 
+    !flt || 
+    !keyboard ||
+    !mouse 
+    ) return 0;
 
   rb->ram = ram;
   rb->program = program;
@@ -23,6 +34,7 @@ int rb_init(
   rb->flt = flt;
   rb->screen = screen;
   rb->keyboard = keyboard;
+  rb->mouse = mouse;
   
   return 1;
 }
@@ -49,6 +61,9 @@ uint8_t rb_read(Rainbows* rb, uint32_t address) {
   if (address >= RB_KEYBOARD_BASE && address < RB_KEYBOARD_BASE + RB_KEYBOARD_SIZE) 
     return rb_keyboard_read(rb->keyboard, address - RB_KEYBOARD_BASE);
 
+  if (address >= RB_MOUSE_BASE && address < RB_MOUSE_BASE + RB_MOUSE_SIZE) 
+    return rb_mouse_read(rb->mouse, address - RB_MOUSE_BASE);
+  
   return rb->ram[address];
 }
 
@@ -85,6 +100,11 @@ void rb_write(Rainbows* rb, uint32_t address, uint8_t value) {
 
   if (address >= RB_KEYBOARD_BASE && address < RB_KEYBOARD_BASE + RB_KEYBOARD_SIZE) {
     rb_keyboard_write(rb->keyboard, address - RB_KEYBOARD_BASE, value);
+    return;
+  }
+
+  if (address >= RB_MOUSE_BASE && address < RB_MOUSE_BASE + RB_MOUSE_SIZE) {
+    rb_mouse_write(rb->mouse, address - RB_MOUSE_BASE, value);
     return;
   }
 

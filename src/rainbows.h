@@ -11,6 +11,7 @@
 #include "devices/arith.h"
 #include "devices/spfloat.h"
 #include "devices/keyboard.h"
+#include "devices/mouse.h"
 
 typedef struct {
   uint8_t* ram;
@@ -23,6 +24,7 @@ typedef struct {
   RbFloat* flt;
   RbScreen* screen;
   RbKeyboard* keyboard;
+  RbMouse* mouse;
 } Rainbows;
 
 // ram assumed to point to a buffer of at least OK_MEM_SIZE bytes
@@ -35,7 +37,8 @@ int rb_init(Rainbows* rb,
             RbDatetime* datetime,
             RbFloat* flt,
             RbScreen* screen,
-            RbKeyboard* keyboard);
+            RbKeyboard* keyboard,
+            RbMouse* mouse);
 
 // addresses are 24-bit ok addresses, represented here with uint32_t
 uint8_t rb_read(Rainbows* rb, uint32_t address);

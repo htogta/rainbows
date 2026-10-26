@@ -146,9 +146,16 @@ int main(int argc, char* argv[]) {
     goto had_error;
   }
 
-  rb_init(&bus, ram, program, &console, &arith, &disk, &dt, &flt, &screen, &keyboard);
+  RbMouse mouse;
+  if (!rb_mouse_init(&mouse)) {
+    printf("Failed to init mouse device\n");
+    goto had_error;
+  }
+
+  rb_init(&bus, ram, program, &console, &arith, &disk, &dt, &flt, &screen, &keyboard, &mouse);
 
   // TODO remove
+  printf("mouse base = %x\n", RB_MOUSE_BASE);
   printf("keyboard base = %x\n", RB_KEYBOARD_BASE);
   printf("screen base = %x\n", RB_SCREEN_BASE);
   printf("disk base = %x\n", RB_DISK_BASE);
@@ -170,6 +177,7 @@ int main(int argc, char* argv[]) {
   ok_init(&vm);
 
   while (!WindowShouldClose() && vm.status == OK_RUNNING) {
+    rb_mouse_update(&mouse, &screen);
     rb_keyboard_update(&keyboard);
   
     // run this frame's slice of vm time
