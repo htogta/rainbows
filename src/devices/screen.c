@@ -32,39 +32,46 @@ void rb_screen_free(RbScreen* s) {
 }
 
 static void draw_fill(RbScreen* s) {
-  // using 32-bit values so x + amt won't overflow, then clip it afterwards
-  uint32_t x0 = s->x;
-  uint32_t y0 = s->y;
+  // x and y are treated as signed shorts
+  // 32-bit math so x + amt can't overflow
+  int32_t x0 = (int16_t)s->x;
+  int32_t y0 = (int16_t)s->y;
+  int32_t x1 = x0 + s->op_amt_x;
+  int32_t y1 = y0 + s->op_amt_y;
   
-  if (x0 >= s->width || y0 >= s->height) return;
-  
-  uint32_t x1 = x0 + s->op_amt_x; 
-  if (x1 > s->width) x1 = s->width;
-  
-  uint32_t y1 = y0 + s->op_amt_y; 
+  // clip the rect to the screen
+  if (x0 < 0) x0 = 0;
+  if (y0 < 0) y0 = 0;
+  if (x1 > s->width)  x1 = s->width;
   if (y1 > s->height) y1 = s->height;
   
-  for (uint32_t row = y0; row < y1; row++) {
+  // nothing left (fully offscreen or empty rect)
+  if (x0 >= x1 || y0 >= y1) return;
+  
+  for (int32_t row = y0; row < y1; row++) {
     uint16_t* line = s->fb + (size_t)row * s->width;
-    for (uint32_t col = x0; col < x1; col++) line[col] = s->color;
+    for (int32_t col = x0; col < x1; col++) line[col] = s->color;
   }
 }
 
 static void draw_sprite(RbScreen* s, int transparent) {
   uint32_t w = s->op_amt_x > 16 ? 16 : s->op_amt_x;
   uint32_t h = s->op_amt_y > 16 ? 16 : s->op_amt_y;
+  int32_t px0 = (int16_t)s->x;
+  int32_t py0 = (int16_t)s->y;
   
   for (uint32_t sy = 0; sy < h; sy++) {
-    uint32_t dy = (uint32_t)s->y + sy;
-    
-    if (dy >= s->height) break;
+    int32_t dy = py0 + (int32_t)sy;
+    if (dy < 0) continue; // skip row when above screen
+    if (dy >= s->height) break; // stop when drawing below screen
     
     for (uint32_t sx = 0; sx < w; sx++) {
-      uint32_t dx = (uint32_t)s->x + sx;
-      if (dx >= s->width) break;
+      int32_t dx = px0 + (int32_t)sx;
+      if (dx < 0) continue; // skip at left of screen
+      if (dx >= s->width) break; // done when we hit right of screen
       
-      // stride = w, so sprites pack tightly
-      uint16_t px = s->sprite[sy * w + sx]; 
+      // stride = w
+      uint16_t px = s->sprite[sy * w + sx];
       if (transparent && px == s->color) continue;
       
       s->fb[(size_t)dy * s->width + dx] = px;
@@ -144,7 +151,7 @@ uint8_t rb_screen_read(RbScreen* s, uint32_t addr) {
   if (addr >= RB_SCREEN_SPRITE && addr < RB_SCREEN_SPRITE + 512) {
     uint32_t off = addr - RB_SCREEN_SPRITE;
     uint16_t w = s->sprite[off >> 1];
-    return (off & 1) ? w >> 8 : w & 0xff;
+    return (off & 1) ? w & 0xff : w >> 8;
   }
   
   switch (addr) {

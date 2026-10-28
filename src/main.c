@@ -155,21 +155,22 @@ int main(int argc, char* argv[]) {
   rb_init(&bus, ram, program, &console, &arith, &disk, &dt, &flt, &screen, &keyboard, &mouse);
 
   // TODO remove
-  printf("mouse base = %x\n", RB_MOUSE_BASE);
-  printf("keyboard base = %x\n", RB_KEYBOARD_BASE);
-  printf("screen base = %x\n", RB_SCREEN_BASE);
-  printf("disk base = %x\n", RB_DISK_BASE);
-  printf("arith base = %x\n", RB_ARITH_BASE);
-  printf("fpu base = %x\n", RB_FLOAT_BASE);
-  printf("console base = %x\n", RB_CONSOLE_BASE);
-  printf("datetime base = %x\n", RB_DATETIME_BASE);
+  // printf("mouse base = %x\n", RB_MOUSE_BASE);
+  // printf("keyboard base = %x\n", RB_KEYBOARD_BASE);
+  // printf("screen base = %x\n", RB_SCREEN_BASE);
+  // printf("disk base = %x\n", RB_DISK_BASE);
+  // printf("arith base = %x\n", RB_ARITH_BASE);
+  // printf("fpu base = %x\n", RB_FLOAT_BASE);
+  // printf("console base = %x\n", RB_CONSOLE_BASE);
+  // printf("datetime base = %x\n", RB_DATETIME_BASE);
 
   // raylib stuff
   SetTraceLogLevel(LOG_ERROR); 
-  SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+  SetConfigFlags(FLAG_WINDOW_RESIZABLE); // TODO remove?
   InitWindow(screen.width, screen.height, "rainbows");
   SetExitKey(KEY_NULL); 
   SetTargetFPS(60);
+  HideCursor();
 
   Texture2D tex = {0};
 
