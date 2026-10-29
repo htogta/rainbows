@@ -21,13 +21,15 @@ static uint8_t button_bits(bool (*test)(int)) {
   return bits;
 }
 
-// adds a scroll delta to a wrapping counter 
-// so fractions get carried to later frames
-static void accumulate_scroll(uint8_t* counter, float* rem, float delta) {
+// sets register to this frame's change in scroll (signed 8bit),
+// fractions are carried in *rem so trackpads still work
+static void scroll_delta(uint8_t* reg, float* rem, float delta) {
   *rem += delta;
-  int whole = (int) *rem; // truncates towards 0
+  int whole = (int) *rem;
+  if (whole > 127) whole = 127; // clamp to int8_t range
+  if (whole < -127) whole = -127;
   *rem -= (float) whole;
-  *counter = (uint8_t) (*counter + whole); // wraps mod 256
+  *reg = (uint8_t) (int8_t) whole;
 }
 
 int rb_mouse_init(RbMouse* m) {
@@ -47,8 +49,8 @@ void rb_mouse_update(RbMouse* m, const RbScreen* s) {
   
   // scroll wheel (positive y is up/away from you, positive x is right)
   Vector2 wheel = GetMouseWheelMoveV();
-  accumulate_scroll(&m->scrollx, &m->scroll_rem_x, wheel.x);
-  accumulate_scroll(&m->scrolly, &m->scroll_rem_y, wheel.y);
+  scroll_delta(&m->scrollx, &m->scroll_rem_x, wheel.x);
+  scroll_delta(&m->scrolly, &m->scroll_rem_y, wheel.y);
 }
 
 uint8_t rb_mouse_read(RbMouse* m, uint32_t addr) {
