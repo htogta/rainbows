@@ -63,17 +63,17 @@ void rb_arith_write(RbArith* a, uint32_t addr, uint8_t value) {
     }
 
     a->op = value;
-    int max_int_size = 1 << ((a->width + 1) * 8);
+    uint64_t max_int_size = UINT64_C(1) << ((a->width + 1) * 8);
     switch (a->op) {
       case RB_ARITH_MUL:
-        a->result = (a->x * a->y) % max_int_size;
+        a->result = ((uint64_t)a->x * a->y) % max_int_size;
         a->err = 0; // reset the error
         break;
       case RB_ARITH_DIV:
         if (a->y == 0) {
           a->err = 1; // divide by 0 err
         } else {
-          a->result = (a->x / a->y) % max_int_size;
+          a->result = ((uint64_t)a->x / a->y) % max_int_size;
           a->err = 0; // reset the error
         }
         break;
@@ -81,7 +81,7 @@ void rb_arith_write(RbArith* a, uint32_t addr, uint8_t value) {
         if (a->y == 0) {
           a->err = 2; // mod by 0 err
         } else {
-          a->result = (a->x % a->y) % max_int_size;
+          a->result = ((uint64_t)a->x % a->y) % max_int_size;
           a->err = 0; // reset the error
         }
         break;
